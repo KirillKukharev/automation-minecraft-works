@@ -2,6 +2,7 @@ import tkinter
 import tkinter.messagebox
 import customtkinter
 import sys
+import time
 
 import pytesseract
 from PIL import ImageGrab
@@ -10,31 +11,36 @@ from PIL import ImageGrab
 customtkinter.set_appearance_mode("Dark")  # Modes: "System" (standard), "Dark", "Light"
 customtkinter.set_default_color_theme("dark-blue")  # Themes: "blue" (standard), "green", "dark-blue"
 
-def detection_digits():
+def detection_digits(first_x, first_y, second_x, second_y, seconds_delay = 5):
     # Test
+    print("Start")
+    time.sleep(seconds_delay)
     counter = 0
-    while True:
+    # while True:
         # This instance will generate an image from
         # the point of (1308, 263) and (1405, 277) in format of (x, y)
-        cap_1 = ImageGrab.grab(bbox=(2617, 525, 2695, 555), all_screens=True)
+    cap_1 = ImageGrab.grab(bbox=(first_x, first_y, second_x, second_y), all_screens=True)
+        # cap_1 = ImageGrab.grab(bbox=(2617, 525, 2695, 555), all_screens=True)
 
-        cap_2 = ImageGrab.grab(bbox=(2733, 525, 2807, 555), all_screens=True)
+        # cap_2 = ImageGrab.grab(bbox=(2733, 525, 2807, 555), all_screens=True)
 
-        text_1 = pytesseract.image_to_string(cap_1, lang='eng',
+    text_1 = pytesseract.image_to_string(cap_1, lang='eng',
                                              config='--psm 10 --oem 3 -c tessedit_char_whitelist=0123456789')
-        text_2 = pytesseract.image_to_string(cap_2, lang='eng',
-                                             config='--psm 10 --oem 3 -c tessedit_char_whitelist=0123456789')
+        # text_2 = pytesseract.image_to_string(cap_2, lang='eng',
+        #                                      config='--psm 10 --oem 3 -c tessedit_char_whitelist=0123456789')
 
-        text = text_1 + " " + text_2
+        # text = text_1 + " " + text_2
+    text = text_1
 
-        if len(text) > 0:
-            print(text)
-
+    if len(text) > 0:
+        print(text)
+    else:
+        print("Nothing")
         # if keyboard.is_pressed('z'):
         #     print('You Pressed A Key!')
         #     break
-        if counter > 10:
-            break
+    # if counter > 10:
+    #         break
 
 
 class App(customtkinter.CTk):
@@ -187,7 +193,23 @@ class App(customtkinter.CTk):
         #                                                command=self.button_event)
         #                                                # command = lambda:self.radio_button_2.grid_remove())
         #                                                # command=lambda:switch_to_pirat())
+
+
         # self.slider_button_2.grid(row=5, column=2, columnspan=1, pady=10, padx=20, sticky="we")
+
+        self.label_info_4 = customtkinter.CTkLabel(master=self.frame_right,
+                                                   text="Задержка перед запуском \n" +
+                                                        "(по умолчанию 5 сек.)",
+                                                   height=20,
+                                                   fg_color=("white", "gray38"),  # <- custom tuple-color
+                                                   # justify=tkinter.LEFT)
+                                                   )
+        self.label_info_4.grid(row=6, column=2, sticky="we", padx=20, pady=15)
+
+        self.seconds_delay = customtkinter.CTkEntry(master=self.frame_right,
+                                                    width=20,
+                                                    placeholder_text="Число секунд")
+        self.seconds_delay.grid(row=7, column=2, pady=10, padx=20, sticky="we")
 
         # self.checkbox_button_1 = customtkinter.CTkButton(master=self.frame_right,
         #                                                  height=25,
@@ -278,6 +300,11 @@ class App(customtkinter.CTk):
                                                 command=self.button_event)
         self.button_5.grid(row=8, column=2, columnspan=1, pady=20, padx=20, sticky="we")
 
+        self.button_7 = customtkinter.CTkButton(master=self.frame_right,
+                                                text="Остановить",
+                                                fg_color='green',)
+                                                # command=self.button_event)
+
         self.button_6 = customtkinter.CTkButton(master=self.frame_right,
                                                 text="Запустить",
                                                 command=self.button_event)
@@ -301,17 +328,25 @@ class App(customtkinter.CTk):
                            self.label_info_2, self.entry, self.entry_2, self.label_info_3,
                            self.left_upper_1, self.right_lower_1, self.left_upper_2, self.right_lower_2,
                            self.button_5, self.label_radio_group, self.left_upper_3, self.right_lower_3,
-                           self.left_upper_4, self.right_lower_4, self.button_6]
+                           self.left_upper_4, self.right_lower_4, self.seconds_delay,self.label_info_4,
+                           self.button_6]
 
     def button_event(self):
         print("Кнопка нажата")
-        if self.left_upper_2.state==tkinter.DISABLED and self.right_lower_2.state == tkinter.DISABLED:
+        self.button_5.grid_remove()
+        self.button_7.grid(row=8, column=2, columnspan=1, pady=20, padx=20, sticky="we")
+
+        if self.left_upper_3.state==tkinter.DISABLED and self.right_lower_3.state == tkinter.DISABLED and self.left_upper_4.state==tkinter.DISABLED and self.right_lower_4.state == tkinter.DISABLED:
             if self.left_upper_1.get() != "" and self.right_lower_1.get() != "":
                 try:
-                    left_up = float(self.left_upper_1.get())
-                    right_down = float(self.right_lower_1.get())
+                    left_up_1 = float(self.left_upper_1.get())
+                    right_down_1 = float(self.right_lower_1.get())
+                    left_up_2 = float(self.left_upper_2.get())
+                    right_down_2 = float(self.right_lower_2.get())
+                    if self.seconds_delay.get() != "":
+                        seconds_timer = int(self.seconds_delay.get())
                     # 2617, 525, 2695, 555
-                    detection_digits()
+                    print(detection_digits(left_up_1, right_down_1, left_up_2, right_down_2, seconds_timer))
                     # print("Ok")
 
                 except ValueError:
@@ -390,6 +425,10 @@ def switch_to_walking(widget):
             widget[i].grid(row=8, column=0, pady=10, padx=20, sticky="we")
         elif i == 15:
             widget[i].grid(row=8, column=1, pady=10, padx=20, sticky="we")
+        elif i == 16:
+            widget[i].grid(row=7, column=2, pady=10, padx=20, sticky="we")
+        elif i == 17:
+            widget[i].grid(row=6, column=2, sticky="we", padx=20, pady=15)
     widget[-1].grid_remove()
 
 if __name__ == "__main__":
