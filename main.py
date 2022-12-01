@@ -2,10 +2,7 @@ import tkinter
 import tkinter.messagebox
 import customtkinter
 import sys
-# import keyboard
 
-# import cv2
-# import numpy as np
 import pytesseract
 from PIL import ImageGrab
 
@@ -238,23 +235,43 @@ class App(customtkinter.CTk):
 
         self.left_upper_1 = customtkinter.CTkEntry(master=self.frame_right,
                                             width=30,
-                                            placeholder_text="Левый верх (1)")
+                                            placeholder_text="Левый верх X (1)")
         self.left_upper_1.grid(row=5, column=0, columnspan=1, pady=20, padx=20, sticky="we")
 
         self.right_lower_1 = customtkinter.CTkEntry(master=self.frame_right,
                                               width=30,
-                                              placeholder_text="Правый низ (1)")
+                                              placeholder_text="Левый верх Y (1)")
         self.right_lower_1.grid(row=5, column=1, columnspan=1, pady=20, padx=20, sticky="we")
 
         self.left_upper_2 = customtkinter.CTkEntry(master=self.frame_right,
                                                    width=20,
-                                                   placeholder_text="Левый верх (2)")
+                                                   placeholder_text="Правый низ X (1)")
         self.left_upper_2.grid(row=6, column=0, pady=20, padx=20, sticky="we")
 
         self.right_lower_2 = customtkinter.CTkEntry(master=self.frame_right,
                                                     width=20,
-                                                    placeholder_text="Правый низ (2)")
+                                                    placeholder_text="Правый низ Y (1)")
         self.right_lower_2.grid(row=6, column=1, pady=20, padx=20, sticky="we")
+
+        self.left_upper_3 = customtkinter.CTkEntry(master=self.frame_right,
+                                                    width=20,
+                                                    placeholder_text="Левый верх X (2)")
+        self.left_upper_3.grid(row=7, column=0, pady=10, padx=20, sticky="we")
+
+        self.right_lower_3 = customtkinter.CTkEntry(master=self.frame_right,
+                                                    width=20,
+                                                    placeholder_text="Левый верх Y (2)")
+        self.right_lower_3.grid(row=7, column=1, pady=10, padx=20, sticky="we")
+
+        self.left_upper_4 = customtkinter.CTkEntry(master=self.frame_right,
+                                                   width=20,
+                                                   placeholder_text="Правый низ X (2)")
+        self.left_upper_4.grid(row=8, column=0, pady=10, padx=20, sticky="we")
+
+        self.right_lower_4 = customtkinter.CTkEntry(master=self.frame_right,
+                                                    width=20,
+                                                    placeholder_text="Правый низ Y (2)")
+        self.right_lower_4.grid(row=8, column=1, pady=10, padx=20, sticky="we")
 
         self.button_5 = customtkinter.CTkButton(master=self.frame_right,
                                                 text="Начать",
@@ -268,8 +285,10 @@ class App(customtkinter.CTk):
         # set default values
         self.radio_button_1.select()
         self.switch_2.select()
-        self.left_upper_2.configure(state=tkinter.DISABLED)
-        self.right_lower_2.configure(state=tkinter.DISABLED)
+        self.left_upper_3.configure(state=tkinter.DISABLED)
+        self.right_lower_3.configure(state=tkinter.DISABLED)
+        self.left_upper_4.configure(state=tkinter.DISABLED)
+        self.right_lower_4.configure(state=tkinter.DISABLED)
         # self.slider_1.set(0.2)
         # self.slider_2.set(0.7)
         # self.progressbar.set(0.5)
@@ -281,10 +300,26 @@ class App(customtkinter.CTk):
         list_of_widgets = [self.radio_button_1, self.radio_button_2,
                            self.label_info_2, self.entry, self.entry_2, self.label_info_3,
                            self.left_upper_1, self.right_lower_1, self.left_upper_2, self.right_lower_2,
-                           self.button_5, self.label_radio_group, self.button_6]
+                           self.button_5, self.label_radio_group, self.left_upper_3, self.right_lower_3,
+                           self.left_upper_4, self.right_lower_4, self.button_6]
 
     def button_event(self):
         print("Кнопка нажата")
+        if self.left_upper_2.state==tkinter.DISABLED and self.right_lower_2.state == tkinter.DISABLED:
+            if self.left_upper_1.get() != "" and self.right_lower_1.get() != "":
+                try:
+                    left_up = float(self.left_upper_1.get())
+                    right_down = float(self.right_lower_1.get())
+                    # 2617, 525, 2695, 555
+                    detection_digits()
+                    # print("Ok")
+
+                except ValueError:
+                    print("Ошибка ")
+            else:
+                print("gg")
+            # print(self.left_upper_1.get())
+        # print(self.right_lower_1.get())
 
     def change_mode(self):
         if self.switch_2.get() == 1:
@@ -300,11 +335,15 @@ class App(customtkinter.CTk):
 
 def change_number_coordingates(self, number):
         if number == 0:
-            self.left_upper_2.configure(state=tkinter.DISABLED)
-            self.right_lower_2.configure(state=tkinter.DISABLED)
+            self.left_upper_3.configure(state=tkinter.DISABLED)
+            self.right_lower_3.configure(state=tkinter.DISABLED)
+            self.left_upper_4.configure(state=tkinter.DISABLED)
+            self.right_lower_4.configure(state=tkinter.DISABLED)
         elif number == 1:
-            self.left_upper_2.configure(state=tkinter.NORMAL)
-            self.right_lower_2.configure(state=tkinter.NORMAL)
+            self.left_upper_3.configure(state=tkinter.NORMAL)
+            self.right_lower_3.configure(state=tkinter.NORMAL)
+            self.left_upper_4.configure(state=tkinter.NORMAL)
+            self.right_lower_4.configure(state=tkinter.NORMAL)
 
 def switch_to_pirat(widget):
     for i in widget:
@@ -343,6 +382,14 @@ def switch_to_walking(widget):
             widget[i].grid(row=8, column=2, columnspan=1, pady=20, padx=20, sticky="we")
         elif i == 11:
             widget[i].grid(row=0, column=2, columnspan=1, pady=20, padx=10, sticky="")
+        elif i == 12:
+            widget[i].grid(row=7, column=0, pady=10, padx=20, sticky="we")
+        elif i == 13:
+            widget[i].grid(row=7, column=1, pady=10, padx=20, sticky="we")
+        elif i == 14:
+            widget[i].grid(row=8, column=0, pady=10, padx=20, sticky="we")
+        elif i == 15:
+            widget[i].grid(row=8, column=1, pady=10, padx=20, sticky="we")
     widget[-1].grid_remove()
 
 if __name__ == "__main__":
