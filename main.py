@@ -1,8 +1,11 @@
+# run: sudo python3.8 main.py
+
 import tkinter
 import tkinter.messagebox
 import customtkinter
-import sys
+# import sys
 import time
+import keyboard
 
 import pytesseract
 from PIL import ImageGrab
@@ -11,37 +14,69 @@ from PIL import ImageGrab
 customtkinter.set_appearance_mode("Dark")  # Modes: "System" (standard), "Dark", "Light"
 customtkinter.set_default_color_theme("dark-blue")  # Themes: "blue" (standard), "green", "dark-blue"
 
-def detection_digits(first_x, first_y, second_x, second_y, seconds_delay = 5):
+def detection_digits(first_x, first_y, second_x, second_y, seconds_delay = 5, third_x = 0, third_y = 0, fourth_x = 0, fourth_y=0):
     # Test
     print("Start")
     time.sleep(seconds_delay)
     counter = 0
-    # while True:
-        # This instance will generate an image from
-        # the point of (1308, 263) and (1405, 277) in format of (x, y)
-    cap_1 = ImageGrab.grab(bbox=(first_x, first_y, second_x, second_y), all_screens=True)
-        # cap_1 = ImageGrab.grab(bbox=(2617, 525, 2695, 555), all_screens=True)
+    if third_x == third_y == fourth_x == fourth_y ==0:
+        while True:
+            # This instance will generate an image from
+            # the point of (1308, 263) and (1405, 277) in format of (x, y)
+            cap_1 = ImageGrab.grab(bbox=(first_x, first_y, second_x, second_y), all_screens=True)
+            # cap_1 = ImageGrab.grab(bbox=(2617, 525, 2695, 555), all_screens=True)
 
-        # cap_2 = ImageGrab.grab(bbox=(2733, 525, 2807, 555), all_screens=True)
+            # cap_2 = ImageGrab.grab(bbox=(2733, 525, 2807, 555), all_screens=True)
 
-    text_1 = pytesseract.image_to_string(cap_1, lang='eng',
-                                             config='--psm 10 --oem 3 -c tessedit_char_whitelist=0123456789')
-        # text_2 = pytesseract.image_to_string(cap_2, lang='eng',
-        #                                      config='--psm 10 --oem 3 -c tessedit_char_whitelist=0123456789')
+            text_1 = pytesseract.image_to_string(cap_1, lang='eng',
+                                                 config='--psm 10 --oem 3 -c tessedit_char_whitelist=0123456789')
+            # text_2 = pytesseract.image_to_string(cap_2, lang='eng',
+            #                                      config='--psm 10 --oem 3 -c tessedit_char_whitelist=0123456789')
 
-        # text = text_1 + " " + text_2
-    text = text_1
+            # text = text_1 + " " + text_2
+            text = text_1
 
-    if len(text) > 0:
-        print(text)
+            if len(text) > 0:
+                if 2100 < int(text) < 2160:
+                    keyboard.press(2) # w - 13, a - 0, s - 1, d-2
+                    print(text)
+            else:
+                print("Nothing")
+
+            if keyboard.is_pressed("space"):
+                break
     else:
-        print("Nothing")
-        # if keyboard.is_pressed('z'):
-        #     print('You Pressed A Key!')
-        #     break
-    # if counter > 10:
-    #         break
+        while True:
+            # This instance will generate an image from
+            # the point of (1308, 263) and (1405, 277) in format of (x, y)
+            cap_1 = ImageGrab.grab(bbox=(first_x, first_y, second_x, second_y), all_screens=True)
+            # cap_1 = ImageGrab.grab(bbox=(2617, 525, 2695, 555), all_screens=True)
 
+            # cap_2 = ImageGrab.grab(bbox=(2733, 525, 2807, 555), all_screens=True)
+            cap_2 = ImageGrab.grab(bbox=(third_x, third_y, fourth_x, fourth_y), all_screens=True)
+
+            text_1 = pytesseract.image_to_string(cap_1, lang='eng',
+                                                 config='--psm 10 --oem 3 -c tessedit_char_whitelist=0123456789')
+            text_2 = pytesseract.image_to_string(cap_2, lang='eng',
+                                                 config='--psm 10 --oem 3 -c tessedit_char_whitelist=0123456789')
+
+
+            if len(text_1) > 0:
+                if 2100 < int(text_1) < 2160:
+                    keyboard.press(2)  # w - 13, a - 0, s - 1, d-2
+                    print(text_1)
+            else:
+                print("Nothing")
+
+            if len(text_2) > 0:
+                if 3100 < int(text_2) < 3400:
+                    keyboard.press(2)  # w - 13, a - 0, s - 1, d-2
+                    print(text_2)
+            else:
+                print("Nothing")
+
+            if keyboard.is_pressed("space"):
+                break
 
 class App(customtkinter.CTk):
 
@@ -131,9 +166,9 @@ class App(customtkinter.CTk):
         self.frame_info.columnconfigure(0, weight=1)
 
         self.label_info_1 = customtkinter.CTkLabel(master=self.frame_info,
-                                                   text="CTkLabel: Lorem ipsum dolor sit,\n" +
-                                                        "amet consetetur sadipscing elitr,\n" +
-                                                        "sed diam nonumy eirmod tempor",
+                                                   text="Kosmak: Запуск - Начать,\n" +
+                                                        "Остановить - пробел,\n" +
+                                                        "Начинать с правого нижнего края",
                                                    height=100,
                                                    fg_color=("white", "gray38"),  # <- custom tuple-color
                                                    justify=tkinter.LEFT)
@@ -301,8 +336,9 @@ class App(customtkinter.CTk):
         self.button_5.grid(row=8, column=2, columnspan=1, pady=20, padx=20, sticky="we")
 
         self.button_7 = customtkinter.CTkButton(master=self.frame_right,
-                                                text="Остановить",
-                                                fg_color='green',)
+                                                text="Возникла проблема",
+                                                fg_color='red',
+                                                state=tkinter.DISABLED)
                                                 # command=self.button_event)
 
         self.button_6 = customtkinter.CTkButton(master=self.frame_right,
@@ -331,29 +367,42 @@ class App(customtkinter.CTk):
                            self.left_upper_4, self.right_lower_4, self.seconds_delay,self.label_info_4,
                            self.button_6]
 
+
     def button_event(self):
         print("Кнопка нажата")
-        self.button_5.grid_remove()
-        self.button_7.grid(row=8, column=2, columnspan=1, pady=20, padx=20, sticky="we")
+        # self.button_5.grid_remove()
+        self.button_7.grid_remove()
+        self.button_7.grid(row=4, column=2, columnspan=1, pady=20, padx=20, sticky="we")
 
         if self.left_upper_3.state==tkinter.DISABLED and self.right_lower_3.state == tkinter.DISABLED and self.left_upper_4.state==tkinter.DISABLED and self.right_lower_4.state == tkinter.DISABLED:
-            if self.left_upper_1.get() != "" and self.right_lower_1.get() != "":
+            if self.left_upper_1.get() != "" and self.right_lower_1.get() != "" and self.left_upper_2.get() != "" and self.right_lower_2.get() != "":
                 try:
                     left_up_1 = float(self.left_upper_1.get())
                     right_down_1 = float(self.right_lower_1.get())
                     left_up_2 = float(self.left_upper_2.get())
                     right_down_2 = float(self.right_lower_2.get())
+                    left_up_3 = 0
+                    right_down_3 = 0
+                    left_up_4 = 0
+                    right_down_4 = 0
                     if self.seconds_delay.get() != "":
                         seconds_timer = int(self.seconds_delay.get())
                     # 2617, 525, 2695, 555
-                    print(detection_digits(left_up_1, right_down_1, left_up_2, right_down_2, seconds_timer))
+                    self.button_7.grid_remove()
+                    print(detection_digits(left_up_1, right_down_1, left_up_2, right_down_2, seconds_timer, left_up_3, right_down_3, left_up_4, right_down_4))
                     # print("Ok")
 
                 except ValueError:
-                    print("Ошибка ")
+                    print("Ошибка в 1 координате")
             else:
                 print("gg")
             # print(self.left_upper_1.get())
+        else:
+            if self.left_upper_1.get() != "" and self.right_lower_1.get() != "" and self.left_upper_2.get() != "" and self.right_lower_2.get() != "" and self.left_upper_3.get() != "" and self.right_lower_3.get() != "" and self.left_upper_4.get() != "" and self.right_lower_4.get() != "":
+                try:
+                    pass
+                except:
+                    print("Ошибка в 2-х координатах")
         # print(self.right_lower_1.get())
 
     def change_mode(self):
