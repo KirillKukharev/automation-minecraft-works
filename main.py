@@ -63,17 +63,17 @@ def detection_digits(first_x, first_y, second_x, second_y, seconds_delay = 5, th
 
             if len(text_1) > 0:
                 if 2100 < int(text_1) < 2160:
-                    keyboard.press(2)  # w - 13, a - 0, s - 1, d-2
-                    print(text_1)
+                    # keyboard.press(2)  # w - 13, a - 0, s - 1, d-2
+                    print(text_1+text_2)
             else:
                 print("Nothing")
 
-            if len(text_2) > 0:
-                if 3100 < int(text_2) < 3400:
-                    keyboard.press(2)  # w - 13, a - 0, s - 1, d-2
-                    print(text_2)
-            else:
-                print("Nothing")
+            # if len(text_2) > 0:
+            #     if 3100 < int(text_2) < 3400:
+            #         keyboard.press(2)  # w - 13, a - 0, s - 1, d-2
+            #         print(text_2)
+            # else:
+            #     print("Nothing")
 
             if keyboard.is_pressed("space"):
                 break
@@ -387,6 +387,8 @@ class App(customtkinter.CTk):
                     right_down_4 = 0
                     if self.seconds_delay.get() != "":
                         seconds_timer = int(self.seconds_delay.get())
+                    else:
+                        seconds_timer = 4
                     # 2617, 525, 2695, 555
                     self.button_7.grid_remove()
                     print(detection_digits(left_up_1, right_down_1, left_up_2, right_down_2, seconds_timer, left_up_3, right_down_3, left_up_4, right_down_4))
@@ -400,7 +402,23 @@ class App(customtkinter.CTk):
         else:
             if self.left_upper_1.get() != "" and self.right_lower_1.get() != "" and self.left_upper_2.get() != "" and self.right_lower_2.get() != "" and self.left_upper_3.get() != "" and self.right_lower_3.get() != "" and self.left_upper_4.get() != "" and self.right_lower_4.get() != "":
                 try:
-                    pass
+                    left_up_1 = float(self.left_upper_1.get())
+                    right_down_1 = float(self.right_lower_1.get())
+                    left_up_2 = float(self.left_upper_2.get())
+                    right_down_2 = float(self.right_lower_2.get())
+                    left_up_3 = float(self.left_upper_3.get())
+                    right_down_3 = float(self.right_lower_3.get())
+                    left_up_4 = float(self.left_upper_4.get())
+                    right_down_4 = float(self.right_lower_4.get())
+                    if self.seconds_delay.get() != "":
+                        seconds_timer = int(self.seconds_delay.get())
+                    else:
+                        seconds_timer = 4
+                    # (2733, 525, 2807, 555)
+
+                    self.button_7.grid_remove()
+                    print(detection_digits(left_up_1, right_down_1, left_up_2, right_down_2, seconds_timer, left_up_3,
+                                           right_down_3, left_up_4, right_down_4))
                 except:
                     print("Ошибка в 2-х координатах")
         # print(self.right_lower_1.get())
