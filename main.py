@@ -1,4 +1,5 @@
-# run: sudo python3.8 main.py
+# run: sudo python3.8 main.py (only for testing)
+# works only on PC under the Windows
 
 import tkinter
 import tkinter.messagebox
@@ -6,11 +7,16 @@ import customtkinter
 # import sys
 import time
 import keyboard
+import admRole
+import ctypes
+
+if not admRole.isUserAdmin():
+    admRole.runAsAdmin()
 
 import pytesseract
+pytesseract.pytesseract.tesseract_cmd = r"C:\Users\User\AppData\Local\Tesseract-OCR\tesseract.exe" #path to tesseract module
 from PIL import ImageGrab
 
-# customtkinter.ScalingTracker.set_user_scaling(0.5)
 customtkinter.set_appearance_mode("Dark")  # Modes: "System" (standard), "Dark", "Light"
 customtkinter.set_default_color_theme("dark-blue")  # Themes: "blue" (standard), "green", "dark-blue"
 
@@ -51,7 +57,6 @@ def detection_digits(first_x, first_y, second_x, second_y, seconds_delay = 5, th
             # the point of (1308, 263) and (1405, 277) in format of (x, y)
             cap_1 = ImageGrab.grab(bbox=(first_x, first_y, second_x, second_y), all_screens=True)
             # cap_1 = ImageGrab.grab(bbox=(2617, 525, 2695, 555), all_screens=True)
-
             # cap_2 = ImageGrab.grab(bbox=(2733, 525, 2807, 555), all_screens=True)
             cap_2 = ImageGrab.grab(bbox=(third_x, third_y, fourth_x, fourth_y), all_screens=True)
 
@@ -60,23 +65,65 @@ def detection_digits(first_x, first_y, second_x, second_y, seconds_delay = 5, th
             text_2 = pytesseract.image_to_string(cap_2, lang='eng',
                                                  config='--psm 10 --oem 3 -c tessedit_char_whitelist=0123456789')
 
+            print(str(text_1)+" "+str(text_2))
+            # 1 мобы форест
+            try:
+                    if 6030 < int(text_1) < 6500:
+                        ctypes.windll.user32.keybd_event(0x53,0,2,0)
+                        ctypes.windll.user32.keybd_event(0x10,0,2,0)
+                        ctypes.windll.user32.keybd_event(0x57,0,0,0)
+                    elif 5500 < int(text_1) < 6005:
+                        ctypes.windll.user32.keybd_event(0x57,0,2,0)
+                        ctypes.windll.user32.keybd_event(0x10,0,0,0)
+                        ctypes.windll.user32.keybd_event(0x53,0,0,0)
+                    if 90 < int(text_2) < 150:
+                        ctypes.windll.user32.keybd_event(0x41,0,2,0)
+                        ctypes.windll.user32.keybd_event(0x44,0,0,0)
+                    elif 20 < int(text_2) < 67:
+                        ctypes.windll.user32.keybd_event(0x44,0,2,0)
+                        ctypes.windll.user32.keybd_event(0x41,0,0,0)
+            except:
+                pass
+            # вердалаки
+##            try:
+##                    if 847 < int(text_1) < 900:
+##                        ctypes.windll.user32.keybd_event(0x53,0,2,0)
+##                        ctypes.windll.user32.keybd_event(0x10,0,2,0)
+##                        ctypes.windll.user32.keybd_event(0x57,0,0,0)
+##                    elif (800 < int(text_1) < 834) or int(text_1)<30:
+##                        ctypes.windll.user32.keybd_event(0x57,0,2,0)
+##                        ctypes.windll.user32.keybd_event(0x53,0,0,0)
+##                        ctypes.windll.user32.keybd_event(0x10,0,0,0)
+##                    if 47 < int(text_2) < 80:
+##                        ctypes.windll.user32.keybd_event(0x41,0,2,0)
+##                        ctypes.windll.user32.keybd_event(0x44,0,0,0)
+##                    elif 20 < int(text_2) < 32:
+##                        ctypes.windll.user32.keybd_event(0x44,0,2,0)
+##                        ctypes.windll.user32.keybd_event(0x41,0,0,0)
+##            except:
+##                pass
+            # кабаны
+##            try:
+##                    if 957 < int(text_1) < 1000:
+##                        ctypes.windll.user32.keybd_event(0x53,0,2,0)
+##                        ctypes.windll.user32.keybd_event(0x10,0,2,0)
+##                        ctypes.windll.user32.keybd_event(0x57,0,0,0)
+##                    elif 800 < int(text_1) < 922:
+##                        ctypes.windll.user32.keybd_event(0x57,0,2,0)
+##                        ctypes.windll.user32.keybd_event(0x53,0,0,0)
+##                        ctypes.windll.user32.keybd_event(0x10,0,0,0)
+##                    if 70 < int(text_2) < 90:
+##                        ctypes.windll.user32.keybd_event(0x41,0,2,0)
+##                        ctypes.windll.user32.keybd_event(0x44,0,0,0)
+##                    elif 20 < int(text_2) < 37:
+##                        ctypes.windll.user32.keybd_event(0x44,0,2,0)
+##                        ctypes.windll.user32.keybd_event(0x41,0,0,0)
+##            except:
+##                pass
 
-            if len(text_1) > 0:
-                if 2100 < int(text_1) < 2160:
-                    # keyboard.press(2)  # w - 13, a - 0, s - 1, d-2
-                    print(text_1+text_2)
-            else:
-                print("Nothing")
-
-            # if len(text_2) > 0:
-            #     if 3100 < int(text_2) < 3400:
-            #         keyboard.press(2)  # w - 13, a - 0, s - 1, d-2
-            #         print(text_2)
-            # else:
-            #     print("Nothing")
-
-            if keyboard.is_pressed("space"):
+            if keyboard.is_pressed("ctrl+shift+z"):
                 break
+        return "Сканирование завершено"
 
 class App(customtkinter.CTk):
 
@@ -109,9 +156,9 @@ class App(customtkinter.CTk):
         # ============ frame_left ============
 
         # configure grid layout (1x11)
-        self.frame_left.grid_rowconfigure(0, minsize=10)   # empty row with minsize as spacing
+        self.frame_left.grid_rowconfigure(0, minsize=10)  # empty row with minsize as spacing
         self.frame_left.grid_rowconfigure(5, weight=1)  # empty row as spacing
-        self.frame_left.grid_rowconfigure(8, minsize=20)    # empty row with minsize as spacing
+        self.frame_left.grid_rowconfigure(8, minsize=20)  # empty row with minsize as spacing
         self.frame_left.grid_rowconfigure(11, minsize=10)  # empty row with minsize as spacing
 
         self.label_1 = customtkinter.CTkLabel(master=self.frame_left,
@@ -135,13 +182,13 @@ class App(customtkinter.CTk):
         self.button_2.grid(row=3, column=0, pady=10, padx=20)
 
         # self.button_3 = customtkinter.CTkButton(master=self.frame_left,
-        #                                         text="Кнопка 3",
+        #                                         text="РљРЅРѕРїРєР° 3",
         #                                         fg_color=("gray75", "gray30"),  # <- custom tuple-color
         #                                         command=self.button_event)
         # self.button_3.grid(row=4, column=0, pady=10, padx=20)
 
-        self.switch_1 = customtkinter.CTkSwitch(master=self.frame_left)
-        self.switch_1.grid(row=9, column=0, pady=10, padx=20, sticky="w")
+        ##        self.switch_1 = customtkinter.CTkSwitch(master=self.frame_left)
+        ##        self.switch_1.grid(row=9, column=0, pady=10, padx=20, sticky="w")
 
         self.switch_2 = customtkinter.CTkSwitch(master=self.frame_left,
                                                 text="Dark Mode",
@@ -166,8 +213,10 @@ class App(customtkinter.CTk):
         self.frame_info.columnconfigure(0, weight=1)
 
         self.label_info_1 = customtkinter.CTkLabel(master=self.frame_info,
-                                                   text="Kosmak: Запуск - Начать,\n" +
-                                                        "Остановить - пробел,\n" +
+                                                   text="Admin: Запуск - Начать,\n" +
+                                                        "Остановить - ctrl+shift+z,\n" +
+                                                        "1 коор-та - шахта,\n" +
+                                                        "2 коор-та - бродилка,\n" +
                                                         "Начинать с правого нижнего края",
                                                    height=100,
                                                    fg_color=("white", "gray38"),  # <- custom tuple-color
@@ -187,7 +236,7 @@ class App(customtkinter.CTk):
 
         self.radio_button_1 = customtkinter.CTkRadioButton(master=self.frame_right,
                                                            variable=self.radio_var,
-                                                           text="1 координата (высота) \n"+
+                                                           text="1 координата (высота) \n" +
                                                                 "     (по умолчанию)",
                                                            value=0,
                                                            command=lambda: change_number_coordingates(self, 0))
@@ -203,6 +252,12 @@ class App(customtkinter.CTk):
         self.radio_button_3 = customtkinter.CTkRadioButton(master=self.frame_right,
                                                            variable=self.radio_var,
                                                            value=2)
+
+        self.combobox_location = customtkinter.CTkComboBox(master=self.frame_right,
+                                                           values=["None", "Замок (4851, 228)", "Форест",
+                                                                   "Острова", "Огн.каты"])
+        self.combobox_location.grid(row=4, column=2, pady=10, padx=20, sticky="n")
+
         # self.radio_button_3.grid(row=3, column=2, pady=10, padx=20, sticky="n")
 
         # self.slider_1 = customtkinter.CTkSlider(master=self.frame_right,
@@ -229,7 +284,6 @@ class App(customtkinter.CTk):
         #                                                # command = lambda:self.radio_button_2.grid_remove())
         #                                                # command=lambda:switch_to_pirat())
 
-
         # self.slider_button_2.grid(row=5, column=2, columnspan=1, pady=10, padx=20, sticky="we")
 
         self.label_info_4 = customtkinter.CTkLabel(master=self.frame_right,
@@ -245,6 +299,12 @@ class App(customtkinter.CTk):
                                                     width=20,
                                                     placeholder_text="Число секунд")
         self.seconds_delay.grid(row=7, column=2, pady=10, padx=20, sticky="we")
+
+        self.load_data_from_file = customtkinter.CTkButton(
+            master=self.frame_right,
+            text="Подгрузить координаты",
+            command=self.load_data)
+        self.load_data_from_file.grid(row=5, column=2, pady=10, padx=20, sticky="we")
 
         # self.checkbox_button_1 = customtkinter.CTkButton(master=self.frame_right,
         #                                                  height=25,
@@ -277,8 +337,8 @@ class App(customtkinter.CTk):
         # self.entry.grid(row=4, column=0, columnspan=1, pady=20, padx=20, sticky="we")
 
         self.entry_2 = customtkinter.CTkEntry(master=self.frame_right,
-                                            width=30,
-                                            placeholder_text="Координата Y")
+                                              width=30,
+                                              placeholder_text="Координата Y")
         # self.entry_2.grid(row=4, column=1, columnspan=1, pady=20, padx=20, sticky="we")
 
         self.label_info_3 = customtkinter.CTkLabel(master=self.frame_right,
@@ -291,13 +351,13 @@ class App(customtkinter.CTk):
         self.label_info_3.grid(row=4, columnspan=2, sticky="nwe", padx=10, pady=10)
 
         self.left_upper_1 = customtkinter.CTkEntry(master=self.frame_right,
-                                            width=30,
-                                            placeholder_text="Левый верх X (1)")
+                                                   width=30,
+                                                   placeholder_text="Левый верх X (1)")
         self.left_upper_1.grid(row=5, column=0, columnspan=1, pady=20, padx=20, sticky="we")
 
         self.right_lower_1 = customtkinter.CTkEntry(master=self.frame_right,
-                                              width=30,
-                                              placeholder_text="Левый верх Y (1)")
+                                                    width=30,
+                                                    placeholder_text="Левый верх Y (1)")
         self.right_lower_1.grid(row=5, column=1, columnspan=1, pady=20, padx=20, sticky="we")
 
         self.left_upper_2 = customtkinter.CTkEntry(master=self.frame_right,
@@ -311,8 +371,8 @@ class App(customtkinter.CTk):
         self.right_lower_2.grid(row=6, column=1, pady=20, padx=20, sticky="we")
 
         self.left_upper_3 = customtkinter.CTkEntry(master=self.frame_right,
-                                                    width=20,
-                                                    placeholder_text="Левый верх X (2)")
+                                                   width=20,
+                                                   placeholder_text="Левый верх X (2)")
         self.left_upper_3.grid(row=7, column=0, pady=10, padx=20, sticky="we")
 
         self.right_lower_3 = customtkinter.CTkEntry(master=self.frame_right,
@@ -335,11 +395,11 @@ class App(customtkinter.CTk):
                                                 command=self.button_event)
         self.button_5.grid(row=8, column=2, columnspan=1, pady=20, padx=20, sticky="we")
 
-        self.button_7 = customtkinter.CTkButton(master=self.frame_right,
+        self.button_7 = customtkinter.CTkButton(master=self.frame_left,
                                                 text="Возникла проблема",
                                                 fg_color='red',
                                                 state=tkinter.DISABLED)
-                                                # command=self.button_event)
+        # command=self.button_event)
 
         self.button_6 = customtkinter.CTkButton(master=self.frame_right,
                                                 text="Запустить",
@@ -364,17 +424,16 @@ class App(customtkinter.CTk):
                            self.label_info_2, self.entry, self.entry_2, self.label_info_3,
                            self.left_upper_1, self.right_lower_1, self.left_upper_2, self.right_lower_2,
                            self.button_5, self.label_radio_group, self.left_upper_3, self.right_lower_3,
-                           self.left_upper_4, self.right_lower_4, self.seconds_delay,self.label_info_4,
-                           self.button_6]
-
+                           self.left_upper_4, self.right_lower_4, self.seconds_delay, self.label_info_4,
+                           self.combobox_location, self.load_data_from_file, self.button_6]
 
     def button_event(self):
-        print("Кнопка нажата")
+        print("Сканирование началось")
         # self.button_5.grid_remove()
         self.button_7.grid_remove()
-        self.button_7.grid(row=4, column=2, columnspan=1, pady=20, padx=20, sticky="we")
+        self.button_7.grid(row=6, column=0, columnspan=1, pady=20, padx=20, sticky="we")
 
-        if self.left_upper_3.state==tkinter.DISABLED and self.right_lower_3.state == tkinter.DISABLED and self.left_upper_4.state==tkinter.DISABLED and self.right_lower_4.state == tkinter.DISABLED:
+        if self.left_upper_3.state == tkinter.DISABLED and self.right_lower_3.state == tkinter.DISABLED and self.left_upper_4.state == tkinter.DISABLED and self.right_lower_4.state == tkinter.DISABLED:
             if self.left_upper_1.get() != "" and self.right_lower_1.get() != "" and self.left_upper_2.get() != "" and self.right_lower_2.get() != "":
                 try:
                     left_up_1 = float(self.left_upper_1.get())
@@ -391,16 +450,20 @@ class App(customtkinter.CTk):
                         seconds_timer = 4
                     # 2617, 525, 2695, 555
                     self.button_7.grid_remove()
-                    print(detection_digits(left_up_1, right_down_1, left_up_2, right_down_2, seconds_timer, left_up_3, right_down_3, left_up_4, right_down_4))
-                    # print("Ok")
+                    print(detection_digits(left_up_1, right_down_1, left_up_2, right_down_2, seconds_timer, left_up_3,
+                                           right_down_3, left_up_4, right_down_4))
 
                 except ValueError:
                     print("Ошибка в 1 координате")
             else:
-                print("gg")
+                print("Произошла ошибка")
             # print(self.left_upper_1.get())
         else:
             if self.left_upper_1.get() != "" and self.right_lower_1.get() != "" and self.left_upper_2.get() != "" and self.right_lower_2.get() != "" and self.left_upper_3.get() != "" and self.right_lower_3.get() != "" and self.left_upper_4.get() != "" and self.right_lower_4.get() != "":
+                if self.seconds_delay.get() != "":
+                    seconds_timer = int(self.seconds_delay.get())
+                else:
+                    seconds_timer = 4
                 try:
                     left_up_1 = float(self.left_upper_1.get())
                     right_down_1 = float(self.right_lower_1.get())
@@ -410,10 +473,6 @@ class App(customtkinter.CTk):
                     right_down_3 = float(self.right_lower_3.get())
                     left_up_4 = float(self.left_upper_4.get())
                     right_down_4 = float(self.right_lower_4.get())
-                    if self.seconds_delay.get() != "":
-                        seconds_timer = int(self.seconds_delay.get())
-                    else:
-                        seconds_timer = 4
                     # (2733, 525, 2807, 555)
 
                     self.button_7.grid_remove()
@@ -421,7 +480,28 @@ class App(customtkinter.CTk):
                                            right_down_3, left_up_4, right_down_4))
                 except:
                     print("Ошибка в 2-х координатах")
-        # print(self.right_lower_1.get())
+        # print(self.right_lower_1.get()) main.py
+
+    def load_data(self, filename='input.txt'):
+        try:
+            FILE = open(filename)
+            coordinates = FILE.readline().split()
+
+            self.left_upper_1.insert(0, coordinates[0])
+            self.right_lower_1.insert(0, coordinates[1])
+
+            self.left_upper_2.insert(0, coordinates[2])
+            self.right_lower_2.insert(0, coordinates[3])
+
+            self.left_upper_3.insert(0, coordinates[4])
+            self.right_lower_3.insert(0, coordinates[5])
+
+            self.left_upper_4.insert(0, coordinates[6])
+            self.right_lower_4.insert(0, coordinates[7])
+            self.load_data_from_file.configure(state=tkinter.DISABLED)
+        except:
+            return tkinter.messagebox.showwarning("Траблы",
+                                                  "Ошибка с файлом, проверьте координаты")
 
     def change_mode(self):
         if self.switch_2.get() == 1:
@@ -435,17 +515,19 @@ class App(customtkinter.CTk):
     def start(self):
         self.mainloop()
 
+
 def change_number_coordingates(self, number):
-        if number == 0:
-            self.left_upper_3.configure(state=tkinter.DISABLED)
-            self.right_lower_3.configure(state=tkinter.DISABLED)
-            self.left_upper_4.configure(state=tkinter.DISABLED)
-            self.right_lower_4.configure(state=tkinter.DISABLED)
-        elif number == 1:
-            self.left_upper_3.configure(state=tkinter.NORMAL)
-            self.right_lower_3.configure(state=tkinter.NORMAL)
-            self.left_upper_4.configure(state=tkinter.NORMAL)
-            self.right_lower_4.configure(state=tkinter.NORMAL)
+    if number == 0:
+        self.left_upper_3.configure(state=tkinter.DISABLED)
+        self.right_lower_3.configure(state=tkinter.DISABLED)
+        self.left_upper_4.configure(state=tkinter.DISABLED)
+        self.right_lower_4.configure(state=tkinter.DISABLED)
+    elif number == 1:
+        self.left_upper_3.configure(state=tkinter.NORMAL)
+        self.right_lower_3.configure(state=tkinter.NORMAL)
+        self.left_upper_4.configure(state=tkinter.NORMAL)
+        self.right_lower_4.configure(state=tkinter.NORMAL)
+
 
 def switch_to_pirat(widget):
     for i in widget:
@@ -455,6 +537,7 @@ def switch_to_pirat(widget):
     widget[4].grid(row=6, column=1, columnspan=1, pady=20, padx=20, sticky="we")
 
     widget[-1].grid(row=8, column=2, columnspan=1, pady=20, padx=20, sticky="we")
+
 
 def switch_to_walking(widget):
     for i in range(len(widget)):
@@ -496,7 +579,12 @@ def switch_to_walking(widget):
             widget[i].grid(row=7, column=2, pady=10, padx=20, sticky="we")
         elif i == 17:
             widget[i].grid(row=6, column=2, sticky="we", padx=20, pady=15)
+        elif i == 18:
+            widget[i].grid(row=4, column=2, pady=10, padx=20, sticky="n")
+        elif i == 19:
+            widget[i].grid(row=5, column=2, pady=10, padx=20, sticky="we")
     widget[-1].grid_remove()
+
 
 if __name__ == "__main__":
     app = App()
